@@ -9,11 +9,27 @@ function App() {
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [hasSubmitted, sethasSubmitted] = useState(false);
 
   useEffect(() => {
     const ssData = sessionStorage.getItem("_tstFormData");
     console.log("sessionData", ssData);
   }, []);
+
+  useEffect(() => {
+    validate();
+  }, [formData.password, formData.confirmPassword]);
+
+  const validate = () => {
+    if (hasSubmitted) {
+      if (formData.password === formData.confirmPassword) {
+        setError("");
+      } else {
+        setError("Passwords do not match!");
+        setSuccess(false);
+      }
+    }
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -32,6 +48,7 @@ function App() {
       setError("Passwords do not match!");
       return;
     }
+    sethasSubmitted(true);
 
     sessionStorage.setItem(
       "_tstFormData",
@@ -41,11 +58,11 @@ function App() {
       })
     );
 
-    setFormData({
-      username: "",
-      password: "",
-      confirmPassword: "",
-    });
+    // setFormData({
+    //   username: "",
+    //   password: "",
+    //   confirmPassword: "",
+    // });
 
     setSuccess(true);
   };
